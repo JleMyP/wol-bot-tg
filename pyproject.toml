@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "wolbot"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pyTelegramBotAPI = "^3.7.3"
+wakeonlan = "^1.1.6"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
