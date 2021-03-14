@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 import json
 import os
 import sys
 
 import telebot
+from environs import Env
 from telebot.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -30,13 +33,13 @@ def handle_hosts(message):
 @bot.callback_query_handler(func=bool)
 def callback_handler(call):
     username = call.from_user.username
-    if users_whitelist and usernamr not in users_whitelist:
+    if users_whitelist and username not in users_whitelist:
         bot.answer_callback_query(call.id)
         bot.send_message(message.chat.id, "not allowed")
         print("cb from {username} rejected")
         return
 
-    host = filter(lambda h: h['name'] == call.data, hosts)
+    host = list(filter(lambda h: h['name'] == call.data, hosts))
     if not host:
         bot.answer_callback_query(call.id)
         bot.send_message(message.chat.id, "host not found")
@@ -51,7 +54,9 @@ def callback_handler(call):
 
 
 if __name__ == '__main__':
-    token = os.getenv('TG_BOT_TOKEN')
+    env = Env()
+    env.read_env()
+    token = env('TG_BOT_TOKEN')
     if not token:
         print("not found env TG_BOT_TOKEN", file=sys.stderr)
         sys.exit(1)
@@ -63,7 +68,7 @@ if __name__ == '__main__':
     with open('hosts.json') as f:
         hosts = json.load(f)
 
-    users_whitelist = os.getenv('TG_USERS_WHITELIST')
+    users_whitelist = env('TG_USERS_WHITELIST')
 
     if users_whitelist:
         users_whitelist = users_whitelist.split(';')
