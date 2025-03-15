@@ -33,6 +33,7 @@ def handle_hosts(message):
 @bot.callback_query_handler(func=bool)
 def callback_handler(call):
     username = call.from_user.username
+    message = call.message
     if users_whitelist and username not in users_whitelist:
         bot.answer_callback_query(call.id)
         bot.send_message(message.chat.id, "not allowed")
